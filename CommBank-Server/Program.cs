@@ -1,4 +1,4 @@
-﻿using CommBank.Models;
+using CommBank.Models;
 using CommBank.Services;
 using MongoDB.Driver;
 
@@ -13,6 +13,12 @@ builder.Configuration.SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("
 
 var mongoClient = new MongoClient(builder.Configuration.GetConnectionString("CommBank"));
 var mongoDatabase = mongoClient.GetDatabase("CommBank");
+
+if (args.Contains("--seed"))
+{
+    await CommBank.Services.DbSeeder.SeedAsync(mongoDatabase);
+    return;
+}
 
 IAccountsService accountsService = new AccountsService(mongoDatabase);
 IAuthService authService = new AuthService(mongoDatabase);

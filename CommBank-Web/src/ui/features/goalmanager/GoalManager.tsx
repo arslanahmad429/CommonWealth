@@ -1,5 +1,5 @@
 import { faCalendarAlt } from '@fortawesome/free-regular-svg-icons'
-import { faDollarSign, IconDefinition } from '@fortawesome/free-solid-svg-icons'
+import { faDollarSign, faSmile, IconDefinition } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date'
 import 'date-fns'
@@ -13,7 +13,7 @@ import DatePicker from '../../components/DatePicker'
 import { Theme } from '../../components/Theme'
 import { BaseEmoji } from 'emoji-mart'
 import EmojiPicker from '../../components/EmojiPicker'
-import AddIconButton from './AddIconButton'
+import { TransparentButton } from '../../components/TransparentButton'
 import GoalIcon from './GoalIcon'
 
 type Props = { goal: Goal }
@@ -110,7 +110,12 @@ export function GoalManager(props: Props) {
 
   return (
     <GoalManagerContainer>
-      <AddIconButton hasIcon={hasIcon()} onClick={addIconOnClick} />
+      <AddIconButtonContainer hasIcon={hasIcon()}>
+        <TransparentButton onClick={addIconOnClick}>
+          <FontAwesomeIcon icon={faSmile} size="2x" />
+          <AddIconButtonText>Add icon</AddIconButtonText>
+        </TransparentButton>
+      </AddIconButtonContainer>
 
       <GoalIconContainer shouldShow={hasIcon()}>
         <GoalIcon icon={goal.icon} onClick={addIconOnClick} />
@@ -158,9 +163,19 @@ export function GoalManager(props: Props) {
 }
 
 type FieldProps = { name: string; icon: IconDefinition }
-type AddIconButtonContainerProps = { shouldShow: boolean }
+type AddIconButtonContainerProps = { hasIcon: boolean }
 type GoalIconContainerProps = { shouldShow: boolean }
 type EmojiPickerContainerProps = { isOpen: boolean; hasIcon: boolean }
+
+const AddIconButtonContainer = styled.div<AddIconButtonContainerProps>`
+  display: ${(props) => (props.hasIcon ? 'none' : 'flex')};
+`
+
+const AddIconButtonText = styled.span`
+  margin-left: 0.6rem;
+  font-size: 1.5rem;
+  color: rgba(174, 174, 174, 1);
+`
 
 const Field = (props: FieldProps) => (
   <FieldContainer>

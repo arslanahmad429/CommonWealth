@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using CommBank.Services;
 using CommBank.Models;
 
@@ -78,7 +78,27 @@ public class GoalController : ControllerBase
             return NotFound();
         }
 
+        // Merge properties to support partial updates (like only updating the icon)
         updatedGoal.Id = goal.Id;
+        updatedGoal.Name ??= goal.Name;
+        updatedGoal.UserId ??= goal.UserId;
+        updatedGoal.TransactionIds ??= goal.TransactionIds;
+        updatedGoal.TagIds ??= goal.TagIds;
+        updatedGoal.Icon ??= goal.Icon;
+        updatedGoal.Created = goal.Created; // Creation time is immutable
+
+        if (updatedGoal.TargetAmount == 0)
+        {
+            updatedGoal.TargetAmount = goal.TargetAmount;
+        }
+        if (updatedGoal.TargetDate == default)
+        {
+            updatedGoal.TargetDate = goal.TargetDate;
+        }
+        if (updatedGoal.Balance == 0.0)
+        {
+            updatedGoal.Balance = goal.Balance;
+        }
 
         await _goalsService.UpdateAsync(id, updatedGoal);
 
